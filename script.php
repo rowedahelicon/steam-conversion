@@ -1,8 +1,7 @@
 <?
 
-//EDIT THIS
-$api_key = "";
-//DON'T EDIT THE REST
+//Steam ID confuckulator, made for PHP by Rowedahelicon
+//Translates all steam id types into the 64BIT 7656XXXXXXXXXXXXXXX version.
 
 function steam3($steam2) {
     $id = explode(':', $steam2);
@@ -12,6 +11,10 @@ function steam3($steam2) {
 
 function steamGrabber($steam_id)
 {
+
+//EDIT THIS
+$api_key = "";
+//DON'T EDIT THE REST
 
 $steam_id = htmlspecialchars($steam_id,ENT_NOQUOTES);
 $steam_id = preg_replace('/\s+/', '', $steam_id);
@@ -88,11 +91,10 @@ $localJSONCache = "resolve_$steam_id.json.cache";
 	$steam_profile_info=@file_get_contents("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=$api_key&vanityurl=$steam_id");
 	file_put_contents($localJSONCache, $steam_profile_vanity);
 	}
-	
-	$json_groups=json_decode($steam_group_info);
-	foreach($json_groups->response as $key){
-	if($key->message == "No match"){ $result = null; }else{ $result = $key->steamid; } //A null result occurs when there is no steam profile associated with the ID provided.
-	}
+	$json_profiles=json_decode($steam_profile_vanity);
+	$success_key = $json_profiles->response->success;
+	if($success_key == 1){ $result = $json_profiles->response->steamid; }else{ $result = null; } //Bad result, meaning the vanity name isn't a real steam id.
+
 
 
 }
